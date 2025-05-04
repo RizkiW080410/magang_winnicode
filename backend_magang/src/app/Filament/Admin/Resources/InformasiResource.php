@@ -17,7 +17,18 @@ class InformasiResource extends Resource
 {
     protected static ?string $model = Informasi::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-information-circle';
+
+    protected static ?string $navigationGroup = 'Management Company';
+
+    protected static ?string $recordTitleAttribute = 'Informasi';
+
+    protected static ?int $navigationSort = 5;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {

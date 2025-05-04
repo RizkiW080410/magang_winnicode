@@ -17,7 +17,18 @@ class TerbitPanganResource extends Resource
 {
     protected static ?string $model = TerbitPangan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clock';
+
+    protected static ?string $navigationGroup = 'Management Data Pangan';
+
+    protected static ?string $recordTitleAttribute = 'Terbit Pangan';
+
+    protected static ?int $navigationSort = 7;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {

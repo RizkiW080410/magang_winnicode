@@ -17,7 +17,18 @@ class CopyrightResource extends Resource
 {
     protected static ?string $model = Copyright::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    protected static ?string $navigationGroup = 'Management Company';
+
+    protected static ?string $recordTitleAttribute = 'Copyright';
+
+    protected static ?int $navigationSort = 6;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {

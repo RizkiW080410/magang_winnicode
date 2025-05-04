@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('beritas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_berita_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_berita_id')->constrained('category_beritas')->onDelete('cascade');
             $table->string('title');
             $table->date('tanggal_terbit');
             $table->longText('isi_berita');

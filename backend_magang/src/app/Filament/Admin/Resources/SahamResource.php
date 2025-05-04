@@ -2,33 +2,45 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\SahamResource\Pages;
-use App\Filament\Admin\Resources\SahamResource\RelationManagers;
-use App\Models\Saham;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Saham;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Admin\Resources\SahamResource\Pages;
+use App\Filament\Admin\Resources\SahamResource\RelationManagers;
 
 class SahamResource extends Resource
 {
     protected static ?string $model = Saham::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+
+    protected static ?string $navigationGroup = 'Management Data Saham';
+
+    protected static ?string $recordTitleAttribute = 'Saham';
+
+    protected static ?int $navigationSort = 11;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('terbit_saham_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('category_saham_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('terbit_saham_id')
+                    ->relationship('terbitSaham', 'sumber')
+                    ->required(),
+                Select::make('category_saham_id')
+                    ->relationship('categorySaham', 'name')
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -54,10 +66,10 @@ class SahamResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('terbit_saham_id')
+                Tables\Columns\TextColumn::make('terbitSaham.sumber')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category_saham_id')
+                Tables\Columns\TextColumn::make('categorySaham.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')

@@ -17,7 +17,18 @@ class SosisalMediaResource extends Resource
 {
     protected static ?string $model = SosisalMedia::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
+
+    protected static ?string $navigationGroup = 'Management Company';
+
+    protected static ?string $recordTitleAttribute = 'Sosial Mendia';
+
+    protected static ?int $navigationSort = 2;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {

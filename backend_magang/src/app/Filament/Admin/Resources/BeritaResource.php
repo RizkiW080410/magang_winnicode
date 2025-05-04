@@ -2,33 +2,45 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\BeritaResource\Pages;
-use App\Filament\Admin\Resources\BeritaResource\RelationManagers;
-use App\Models\Berita;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Berita;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Admin\Resources\BeritaResource\Pages;
+use App\Filament\Admin\Resources\BeritaResource\RelationManagers;
 
 class BeritaResource extends Resource
 {
     protected static ?string $model = Berita::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+
+    protected static ?string $navigationGroup = 'Management Berita';
+
+    protected static ?string $recordTitleAttribute = 'Berita';
+
+    protected static ?int $navigationSort = 13;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('category_berita_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('user_id')
+                    ->relationship('user', 'name')
+                    ->required(),
+                Select::make('category_berita_id')
+                    ->relationship('categoryBerita', 'name')
+                    ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
@@ -47,10 +59,10 @@ class BeritaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category_berita_id')
+                Tables\Columns\TextColumn::make('categoryBerita.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('title')

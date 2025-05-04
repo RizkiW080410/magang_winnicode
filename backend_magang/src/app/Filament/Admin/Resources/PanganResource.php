@@ -2,30 +2,42 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\PanganResource\Pages;
-use App\Filament\Admin\Resources\PanganResource\RelationManagers;
-use App\Models\Pangan;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Pangan;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Admin\Resources\PanganResource\Pages;
+use App\Filament\Admin\Resources\PanganResource\RelationManagers;
 
 class PanganResource extends Resource
 {
     protected static ?string $model = Pangan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
+    protected static ?string $navigationGroup = 'Management Data Pangan';
+
+    protected static ?string $recordTitleAttribute = 'Pangan';
+
+    protected static ?int $navigationSort = 8;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('terbit_pangan_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('terbit_pangan_id')
+                    ->relationship('terbitPangan', 'sumber')
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -44,7 +56,7 @@ class PanganResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('terbit_pangan_id')
+                Tables\Columns\TextColumn::make('terbitPangan.sumber')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')

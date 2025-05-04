@@ -19,6 +19,17 @@ class CategoryBeritaResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Management Berita';
+
+    protected static ?string $recordTitleAttribute = 'Category Berita';
+
+    protected static ?int $navigationSort = 12;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form

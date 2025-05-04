@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pangans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('terbit_pangan_id')->constrained()->onDelete('cascade');
+            $table->foreignId('terbit_pangan_id')->constrained('terbit_pangans')->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('harga')->default(0);

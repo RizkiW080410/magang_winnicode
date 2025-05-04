@@ -17,7 +17,18 @@ class BranchCompanyResource extends Resource
 {
     protected static ?string $model = BranchCompany::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?string $navigationGroup = 'Management Company';
+
+    protected static ?string $recordTitleAttribute = 'Branch Company';
+
+    protected static ?int $navigationSort = 4;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {

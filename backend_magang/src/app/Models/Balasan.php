@@ -9,9 +9,9 @@ class Balasan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['comment_id', 'user_id', 'reply'];
+    protected $fillable = ['komentar_id', 'user_id', 'reply'];
 
-    public function comment()
+    public function komentars()
     {
         return $this->belongsTo(Komentar::class);
     }

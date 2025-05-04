@@ -17,7 +17,18 @@ class CategorySahamResource extends Resource
 {
     protected static ?string $model = CategorySaham::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+
+    protected static ?string $navigationGroup = 'Management Data Saham';
+
+    protected static ?string $recordTitleAttribute = 'Category Saham';
+
+    protected static ?int $navigationSort = 9;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
