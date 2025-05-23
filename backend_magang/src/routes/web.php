@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FrontendController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
@@ -16,6 +17,11 @@ Livewire::setScriptRoute(function ($handle) {
 /*
 / END
 */
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', [FrontendController::class, 'index']);
+Route::get('/detailberita', [FrontendController::class, 'detailberita']);
+Route::get('/infopangan', [FrontendController::class, 'infopangan']);
+Route::get('/infosaham', [FrontendController::class, 'infosaham']);
