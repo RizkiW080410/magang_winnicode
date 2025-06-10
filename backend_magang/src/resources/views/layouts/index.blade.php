@@ -55,12 +55,17 @@
 <!-- Menu -->
 <div class="bg-white shadow-sm">
   <div class="container">
-    <ul class="nav nav-pills justify-content-center py-2">
-      <li class="nav-item"><a class="nav-link" href="/detailberita">Ekonomi Bisnis</a></li>
-      <li class="nav-item"><a class="nav-link" href="/detailberita">Pasar Saham</a></li>
-      <li class="nav-item"><a class="nav-link" href="/detailberita">Crypto</a></li>
-      <li class="nav-item"><a class="nav-link" href="/detailberita">Industri</a></li>
-      <li class="nav-item"><a class="nav-link" href="/detailberita">Infrastruktur</a></li>
+    <ul class="nav nav-pills justify-content-center py-2" id="kategoriFilter">
+      <li class="nav-item">
+        <a href="#" class="nav-link kategori-btn" data-filter="all">Semua</a>
+      </li>
+      @foreach ($categories as $category)
+        <li class="nav-item">
+          <a href="#" class="nav-link kategori-btn" data-filter="{{ strtolower($category->name) }}">
+            {{ $category->name }}
+          </a>
+        </li>
+      @endforeach
     </ul>
   </div>
 </div>
@@ -188,6 +193,51 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="front/js/script.js"></script>
+{{-- <script src="front/js/script.js"></script> --}}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const filterButtons = document.querySelectorAll('.kategori-btn');
+  const beritaItems = document.querySelectorAll('.berita-item');
+  const beritaTerkiniItems = document.querySelectorAll('.berita-terkini-item');
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      // Highlight tombol aktif
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+
+      const kategori = this.dataset.filter.toLowerCase();
+
+      // ✨ Fungsi untuk filter berita
+      function filterElements(items, isFlex = false) {
+        items.forEach(item => {
+          const itemKategori = item.dataset.category.toLowerCase();
+          const shouldShow = kategori === 'all' || itemKategori === kategori;
+
+          if (shouldShow) {
+            item.style.display = isFlex ? 'flex' : 'block';
+            item.style.visibility = 'hidden';
+            item.style.opacity = 0;
+            setTimeout(() => {
+              item.style.visibility = 'visible';
+              item.style.opacity = 1;
+            }, 10);
+          } else {
+            item.style.opacity = 0;
+            setTimeout(() => {
+              item.style.display = 'none';
+            }, 200);
+          }
+        });
+      }
+
+      filterElements(beritaItems); // untuk grid berita utama
+      filterElements(beritaTerkiniItems, true); // untuk sidebar (flex)
+    });
+  });
+});
+</script>
 </body>
 </html>

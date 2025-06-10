@@ -163,15 +163,16 @@ form i {
 }
 
 .latest-news {
-    flex-grow: 1;
-    overflow-y: auto;
-    min-height: 0;
+    overflow: visible;
+    max-height: none;
 }
 
 .news-item {
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
 }
 
 .news-item:last-child {
@@ -443,6 +444,17 @@ form i {
     
     
 }
+
+.berita-item {
+  transition: all 0.3s ease-in-out;
+}
+
+.berita-item,
+.berita-terkini-item {
+  transition: opacity 0.2s ease;
+}
+
+
 
 
 

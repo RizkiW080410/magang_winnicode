@@ -43,6 +43,7 @@
             @endauth
         </nav>
     @endif
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae atque vel itaque, natus, iste ipsam sequi nostrum pariatur, deserunt perferendis eveniet illo rerum! Rerum dolore nisi expedita facere odit nesciunt maiores magni quos rem cupiditate nobis veniam sed, aliquam illum molestias minus animi commodi quo amet explicabo impedit, atque et saepe ullam. Nam animi facilis obcaecati consequatur recusandae nostrum! Error illo voluptatibus optio maxime. Iure ad placeat sequi vero nobis cumque totam. Itaque placeat beatae ex iste odit repellat iure aperiam delectus. Vitae soluta necessitatibus distinctio quae assumenda illo tempora officia expedita, ipsa ad ex commodi nostrum maxime unde consequatur.</p>
 </header>
 <div
     class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
