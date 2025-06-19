@@ -26,6 +26,11 @@ Route::get('/', [FrontendController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/detailberita', [FrontendController::class, 'detailberita']);
+Route::get('/detailberita/{id}', [FrontendController::class, 'detailberita'])->name('detail.berita');
 Route::get('/infopangan', [FrontendController::class, 'infopangan']);
 Route::get('/infosaham', [FrontendController::class, 'infosaham']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/komentar/{berita}', [FrontendController::class, 'store'])->name('komentar.store');
+    Route::post('/balasan/{komentar}', [FrontendController::class, 'storebalasan'])->name('balasan.store');
+});

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
+use App\Models\Komentar;
 use Illuminate\Http\Request;
 use App\Models\CategoryBerita;
 
@@ -29,9 +30,40 @@ class FrontendController extends Controller
         return view('frontend.infosaham', compact('categories'));
     }
 
-    public function detailberita()
+    public function detailberita($id)
     {
+        $berita = Berita::with('user', 'categoryBerita')->findOrFail($id);
         $categories = CategoryBerita::all();
-        return view('frontend.detailberita', compact('categories'));
+
+        $komentarList = Komentar::with(['user', 'replies.user'])
+            ->where('berita_id', $berita->id)
+            ->latest()
+            ->get();
+
+        return view('frontend.detailberita', compact('berita', 'categories', 'komentarList'));
+    }
+
+    public function store(Request $request, Berita $berita)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        $berita->komentars()->create([
+            'user_id' => auth()->id(),
+            'comment' => $request->comment,
+        ]);
+
+        return back()->with('success', 'Komentar berhasil ditambahkan!');
+    }
+
+    public function storebalasan(Request $request, Komentar $komentar)
+    {
+        $request->validate(['reply' => 'required']);
+        $komentar->replies()->create([
+            'user_id' => auth()->id(),
+            'reply' => $request->reply,
+        ]);
+        return back();
     }
 }

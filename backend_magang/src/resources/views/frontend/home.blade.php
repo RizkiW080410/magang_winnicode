@@ -18,7 +18,7 @@
                   <h3 class="fw-bold">{{ Str::limit($berita->title, 80) }}</h3>
                   <p class="mb-1">{{ Str::limit(strip_tags($berita->isi_berita), 100) }}</p>
                   <small>{{ $berita->user->name }} • {{ \Carbon\Carbon::parse($berita->tanggal_terbit)->diffForHumans() }}</small><br>
-                  <a href="/detailberita" class="text-warning text-decoration-none"><small>Baca Selengkapnya</small></a>
+                  <a href="{{ route('detail.berita', $berita->id) }}" class="text-warning text-decoration-none"><small>Baca Selengkapnya</small></a>
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@
                   <small class="text-muted">{{ \Carbon\Carbon::parse($berita->tanggal_terbit)->diffForHumans() }}</small>
                 </div>
                 <small>{{ Str::limit(strip_tags($berita->isi_berita), 50) }}</small><br>
-                <a href="/detailberita" class="text-primary text-decoration-none">
+                <a href="{{ route('detail.berita', $berita->id) }}" class="text-primary text-decoration-none">
                   <small>Baca Selengkapnya</small>
                 </a>
               </div>
@@ -184,7 +184,7 @@
               <strong>{{ $berita->user->name }}</strong><br>
               <span class="text-muted">{{ \Carbon\Carbon::parse($berita->tanggal_terbit)->diffForHumans() }}</span>
             </div>
-            <a href="/detailberita" class="text-danger fw-semibold text-decoration-none">Baca Selengkapnya</a>
+            <a href="{{ route('detail.berita', $berita->id) }}" class="text-danger fw-semibold text-decoration-none">Baca Selengkapnya</a>
           </div>
         </div>
       </div>

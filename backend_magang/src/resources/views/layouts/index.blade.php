@@ -16,10 +16,10 @@
   <!-- Poppins Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="front/style/style.css">
-  <link rel="stylesheet" href="front/style/detail.css">
-  <link rel="stylesheet" href="front/style/infosaham.css">
-  <link rel="stylesheet" href="front/style/infopangan.css">
+  <link rel="stylesheet" href="{{ asset('front/style/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/style/detail.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/style/infosaham.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/style/infopangan.css') }}">
 </head>
 <body>
 
@@ -27,7 +27,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark-custom py-3">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <img src="front/assets/icon.png" alt="Portal Berita Logo" height="70">
+      <img src="{{ asset('front/assets/icon.png') }}" alt="Portal Berita Logo" height="70">
     </a>
     <form class="d-flex position-relative mx-auto w-50">
       <input class="form-control rounded-pill ps-5" type="search" placeholder="Cari berita..." aria-label="Search">
@@ -79,12 +79,12 @@
       <div class="row g-0">
         <!-- Gambar kiri -->
         <div class="col-md-6 d-none d-md-block">
-          <img src="front/assets/iconlogin.png" alt="News" class="img-fluid h-100 w-100" style="object-fit: cover;">
+          <img src="{{ asset('front/assets/iconlogin.png') }}" alt="News" class="img-fluid h-100 w-100" style="object-fit: cover;">
         </div>
         <!-- Form kanan -->
         <div class="col-md-6 p-4 d-flex flex-column justify-content-center">
           <div class="text-center mb-4">
-            <img src="front/assets/subiconlogin.png" width="100" alt="Logo">
+            <img src="{{ asset('front/assets/subiconlogin.png') }}" width="100" alt="Logo">
             <h5 class="fw-bold mt-3">LOG IN</h5>
           </div>
           <form method="POST" action="{{ route('login') }}">
@@ -109,13 +109,13 @@
       <div class="row g-0">
         <!-- Ilustrasi di kiri -->
         <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center bg-light">
-          <img src="front/assets/iconregister.png" alt="Register Illustration" class="img-fluid p-4" />
+          <img src="{{ asset('front/assets/iconregister.png') }}" alt="Register Illustration" class="img-fluid p-4" />
         </div>
 
         <!-- Formulir kanan -->
         <div class="col-md-6 p-4 d-flex flex-column justify-content-center">
           <div class="text-center mb-4">
-            <img src="front/assets/subiconlogin.png" width="80" alt="Logo">
+            <img src="{{ asset('front/assets/subiconlogin.png') }}" width="80" alt="Logo">
             <h5 class="fw-bold mt-2">Create Account</h5>
           </div>
           <form method="POST" action="{{ route('register') }}">
@@ -174,8 +174,8 @@
       <!-- Kolom 4 -->
       <div class="col-md-3 mb-4">
         <div class="d-flex align-items-center justify-content-center mb-2">
-          <img src="front/assets/footer.png" alt="Winnicode Logo" style="height: 45px; margin-right: 10px;">
-          <img src="front/assets/merdeka.png" alt="Kampus Merdeka Logo" style="height: 45px;">
+          <img src="{{ asset('front/assets/footer.png') }}" alt="Winnicode Logo" style="height: 45px; margin-right: 10px;">
+          <img src="{{ asset('front/assets/merdeka.png') }}" alt="Kampus Merdeka Logo" style="height: 45px;">
         </div>
         <p class="small text-center">
           Jurnalistik Program winnicode adalah program pengembangan sumber daya manusia yang ditujukan bagi pemuda pemudi yang berkarir di dunia report.
@@ -238,6 +238,45 @@
     });
   });
 });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const buttons = document.querySelectorAll(".like-btn");
+
+  buttons.forEach(button => {
+    const id = button.getAttribute("data-id");
+    const icon = document.getElementById("icon-" + id);
+    const count = document.getElementById("like-count-" + id);
+
+    // Inisialisasi status dari localStorage
+    if (localStorage.getItem("liked-" + id) === "true") {
+      icon.classList.remove("bi-hand-thumbs-up");
+      icon.classList.add("bi-hand-thumbs-up-fill");
+      count.innerText = "1";
+    }
+
+    button.addEventListener("click", function () {
+      const liked = localStorage.getItem("liked-" + id) === "true";
+
+      if (liked) {
+        icon.classList.remove("bi-hand-thumbs-up-fill");
+        icon.classList.add("bi-hand-thumbs-up");
+        localStorage.setItem("liked-" + id, "false");
+        count.innerText = "0";
+      } else {
+        icon.classList.remove("bi-hand-thumbs-up");
+        icon.classList.add("bi-hand-thumbs-up-fill");
+        localStorage.setItem("liked-" + id, "true");
+        count.innerText = "1";
+      }
+    });
+  });
+});
+
+function toggleReplyForm(id) {
+  const form = document.getElementById("reply-form-" + id);
+  form.classList.toggle("d-none");
+}
 </script>
 </body>
 </html>
