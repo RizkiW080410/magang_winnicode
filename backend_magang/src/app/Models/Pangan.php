@@ -9,10 +9,5 @@ class Pangan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['terbit_pangan_id', 'name', 'description', 'harga', 'image'];
-
-    public function terbitPangan()
-    {
-        return $this->belongsTo(TerbitPangan::class);
-    }
+    protected $fillable = ['name', 'description', 'harga', 'image', 'last_update', 'sumber'];
 }

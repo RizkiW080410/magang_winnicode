@@ -9,6 +9,12 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\PanganResource\Pages;
@@ -35,19 +41,32 @@ class PanganResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('terbit_pangan_id')
-                    ->relationship('terbitPangan', 'sumber')
-                    ->required(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
+                    ->label('Nama Pangan')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
+
+                Textarea::make('description')
+                    ->label('Deskripsi')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('harga')
+
+                TextInput::make('harga')
+                    ->label('Harga (Rp/kg)')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\FileUpload::make('image')
+
+                DatePicker::make('last_update')
+                    ->label('Last Update')
+                    ->required(),
+
+                TextInput::make('sumber')
+                    ->label('Sumber')
+                    ->required()
+                    ->maxLength(255),
+
+                FileUpload::make('image')
+                    ->label('Gambar')
                     ->image(),
             ]);
     }
@@ -56,15 +75,27 @@ class PanganResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('terbitPangan.sumber')
+                TextColumn::make('name')
+                    ->label('Nama')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('harga')
+                    ->label('Harga (Rp)')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('harga')
-                    ->numeric()
+
+                TextColumn::make('sumber')
+                    ->label('Sumber')
                     ->sortable(),
-                Tables\Columns\ImageColumn::make('image'),
+
+                TextColumn::make('last_update')
+                    ->label('Last Update')
+                    ->dateTime('d M Y H:i')
+                    ->sortable(),
+
+                ImageColumn::make('image')
+                    ->label('Gambar'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

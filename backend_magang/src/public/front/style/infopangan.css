@@ -200,6 +200,42 @@ form i {
     color: white;
   }
 
+.modal-content {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+  border-bottom: none;
+  color: #fff;
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.btn-close {
+  filter: invert(1);
+  opacity: .8;
+}
+.btn-close:hover {
+  opacity: 1;
+}
+
+/* Animasi masuk modal */
+.modal.fade .modal-dialog {
+  transform: translateY(-50px);
+  transition: transform 0.3s ease-out;
+}
+.modal.show .modal-dialog {
+  transform: translateY(0);
+}
+
+
 
 
 

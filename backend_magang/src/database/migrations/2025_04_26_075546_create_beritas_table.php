@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_berita_id')->constrained('category_beritas')->onDelete('cascade');
             $table->string('title');
-            $table->date('tanggal_terbit');
+            $table->dateTime('tanggal_terbit');
             $table->longText('isi_berita');
             $table->string('image');
             $table->timestamps();

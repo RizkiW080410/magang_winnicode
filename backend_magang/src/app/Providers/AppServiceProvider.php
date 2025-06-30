@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Berita;
 use Filament\Pages\Page;
 use App\Models\CategoryBerita;
 use App\Policies\ActivityPolicy;
@@ -43,6 +44,17 @@ class AppServiceProvider extends ServiceProvider
         };
         MountableAction::configureUsing(function (MountableAction $action) {
             $action->modalFooterActionsAlignment(Alignment::Right);
+        });
+
+        View::composer('layouts.index', function($view){
+            $list = Berita::orderByDesc('tanggal_terbit')
+                        ->get(['id','title','image'])
+                        ->map(fn($b) => [
+                            'id'    => $b->id,
+                            'title' => $b->title,
+                            'img'   => asset('storage/'.$b->image),
+                        ]);
+            $view->with('beritaList', $list);
         });
     }
 }

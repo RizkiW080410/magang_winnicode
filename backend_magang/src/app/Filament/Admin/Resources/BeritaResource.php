@@ -7,6 +7,7 @@ use Filament\Tables;
 use App\Models\Berita;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,6 +27,19 @@ class BeritaResource extends Resource
 
     protected static ?int $navigationSort = 13;
 
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Jika panel saat ini adalah 'penulis', batasi ke berita milik user
+        $panel = Filament::getCurrentPanel();
+        if ($panel?->getId() === 'penulis') {
+            $query->where('user_id', auth()->id());
+        }
+
+        return $query;
+    }
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
@@ -44,7 +58,7 @@ class BeritaResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DatePicker::make('tanggal_terbit')
+                Forms\Components\DateTimePicker::make('tanggal_terbit')
                     ->required(),
                 Forms\Components\Textarea::make('isi_berita')
                     ->required()

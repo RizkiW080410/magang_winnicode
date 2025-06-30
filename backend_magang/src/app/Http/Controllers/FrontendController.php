@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Berita;
+use App\Models\Pangan;
 use App\Models\Komentar;
 use Illuminate\Http\Request;
 use App\Models\CategoryBerita;
@@ -15,13 +16,27 @@ class FrontendController extends Controller
         $categories = CategoryBerita::all();
         $latestNews = Berita::with('user', 'categoryBerita')->latest()->take(6)->get();
         $headlineNews = Berita::with('user', 'categoryBerita')->latest()->take(4)->get();
-        return view('frontend.home', compact('beritas', 'categories', 'latestNews', 'headlineNews'));
+        $pangans = Pangan::orderByDesc('updated_at')
+                        ->take(5)
+                        ->get();
+        $lastUpdate = Pangan::max('last_update')
+                    ?: Pangan::max('updated_at');
+        $latestPangan = $pangans->first();
+        $sumber = $latestPangan->sumber ?? '—';
+        return view('frontend.home', compact('beritas', 'categories', 'latestNews', 'headlineNews', 'pangans', 'lastUpdate', 'sumber',));
     }
 
     public function infopangan()
     {
-        $categories = CategoryBerita::all();
-        return view('frontend.infopangan', compact('categories'));
+        $categories  = CategoryBerita::all();
+        $pangans     = Pangan::orderByDesc('last_update')->get();
+        $lastUpdate  = $pangans->max('last_update');
+        $latestPangan= $pangans->first();
+        $sumber      = $latestPangan->sumber ?? '—';
+
+        return view('frontend.infopangan', compact(
+        'categories','pangans','lastUpdate','sumber'
+        ));
     }
 
     public function infosaham()

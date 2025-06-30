@@ -29,9 +29,19 @@
     <a class="navbar-brand" href="/">
       <img src="{{ asset('front/assets/icon.png') }}" alt="Portal Berita Logo" height="70">
     </a>
-    <form class="d-flex position-relative mx-auto w-50">
-      <input class="form-control rounded-pill ps-5" type="search" placeholder="Cari berita..." aria-label="Search">
+    <form class="d-flex position-relative mx-auto w-50 dropdown" autocomplete="off">
+      <input
+        id="searchInput"
+        class="form-control rounded-pill ps-5 dropdown-toggle"
+        type="search"
+        placeholder="Cari berita..."
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
       <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+
+      <ul id="searchResults" class="dropdown-menu w-100 mt-1"></ul>
     </form>
     <div class="d-flex">
       @auth
@@ -277,6 +287,48 @@ function toggleReplyForm(id) {
   const form = document.getElementById("reply-form-" + id);
   form.classList.toggle("d-none");
 }
+</script>
+<script>
+  // Variabel global berisi daftar berita: [{id,title},...]
+  window.beritaList = @json($beritaList);
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const input = document.getElementById('searchInput');
+  const menu  = document.getElementById('searchResults');
+  let timeout;
+
+  input.addEventListener('input', () => {
+    clearTimeout(timeout);
+    const q = input.value.trim().toLowerCase();
+    if (q.length < 2) return menu.innerHTML = '';
+
+    timeout = setTimeout(() => {
+      const matches = window.beritaList
+        .filter(b => b.title.toLowerCase().includes(q))
+        .slice(0,5);
+
+      if (matches.length === 0) {
+        menu.innerHTML = '<li class="px-3 py-2 text-muted">Tidak ada hasil.</li>';
+      } else {
+        menu.innerHTML = matches.map(b => `
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="/detailberita/${b.id}">
+              <img src="${b.img}" alt="" class="me-2 rounded" style="width:40px; height:40px; object-fit:cover;">
+              <span class="flex-grow-1 text-truncate">${b.title}</span>
+            </a>
+          </li>
+        `).join('');
+      }
+
+      new bootstrap.Dropdown(input).show();
+    }, 200);
+  });
+
+  document.addEventListener('click', e => {
+    if (!input.contains(e.target)) menu.innerHTML = '';
+  });
+});
 </script>
 </body>
 </html>

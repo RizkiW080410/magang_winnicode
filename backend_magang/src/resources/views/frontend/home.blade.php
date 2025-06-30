@@ -39,59 +39,52 @@
       <div class="row align-items-start">
         <!-- Kiri: Judul + Deskripsi -->
         <div class="col-md-4 mb-3">
-            <h5 class="fw-bold mb-2">Info Pangan</h5>
-            <p class="text-muted mb-1"><strong>Last Update:</strong> Minggu, 23 Maret 2025</p>
-            <p class="text-muted mb-3"><strong>Sumber:</strong> Info Pangan Jakarta</p>
-            <!-- Tombol untuk Desktop -->
-            <a href="/infopangan" class="btn btn-danger fw-bold btn-baca-selengkapnya d-none d-md-inline-block">Baca Selengkapnya</a>
+          <h5 class="fw-bold mb-2">Info Pangan</h5>
+
+          @if($pangans->isNotEmpty())
+            <p class="text-muted mb-1">
+              <strong>Last Update:</strong>
+              {{ \Carbon\Carbon::parse($lastUpdate)
+                    ->translatedFormat('l, d F Y') }}
+            </p>
+            <p class="text-muted mb-3">
+              <strong>Sumber:</strong> {{ $sumber }}
+            </p>
+          @else
+            <p class="text-muted mb-3"><em>Data tidak tersedia.</em></p>
+          @endif
+
+          <a href="{{ url('/infopangan') }}"
+            class="btn btn-danger fw-bold d-none d-md-inline-block">
+            Baca Selengkapnya
+          </a>
         </div>
             <!-- Kanan: Scrollable Cards -->
             <div class="col-md-8">
-                <div class="d-flex overflow-auto gap-3 pb-2">
-        
-                <!-- Card Items -->
-                <div class="card p-3 text-center flex-shrink-0" style="width: 160px;">
-                    <img src="front/assets/cabai.png" alt="Cabai" class="mx-auto mb-2" style="width: 80px; height: 80px; object-fit: contain;">
-                    <p class="fw-bold mb-1">Cabai</p>
-                    <p class="text-muted mb-1 small">Deskripsi</p>
-                    <p class="fw-bold text-success small">Rp 20.000/kg</p>
-                </div>
-        
-                <div class="card p-3 text-center flex-shrink-0" style="width: 160px;">
-                    <img src="front/assets/telur.png" alt="Telur" class="mx-auto mb-2" style="width: 80px; height: 80px; object-fit: contain;">
-                    <p class="fw-bold mb-1">Telur</p>
-                    <p class="text-muted mb-1 small">Deskripsi</p>
-                    <p class="fw-bold text-success small">Rp 20.000/kg</p>
-                </div>
-        
-                <div class="card p-3 text-center flex-shrink-0" style="width: 160px;">
-                    <img src="front/assets/bawang.png" alt="Bawang" class="mx-auto mb-2" style="width: 80px; height: 80px; object-fit: contain;">
-                    <p class="fw-bold mb-1">Bawang</p>
-                    <p class="text-muted mb-1 small">Deskripsi</p>
-                    <p class="fw-bold text-success small">Rp 20.000/kg</p>
-                </div>
+              <div class="d-flex overflow-auto gap-3 pb-2">
+                @forelse($pangans as $pangan)
+                  <div class="card p-3 text-center flex-shrink-0" style="width:160px;">
+                    <img src="{{ asset('storage/' . $pangan->image) }}"
+                        alt="{{ $pangan->name }}"
+                        class="mx-auto mb-2"
+                        style="width:80px; height:80px; object-fit:contain;">
 
-                <div class="card p-3 text-center flex-shrink-0" style="width: 160px;">
-                    <img src="front/assets/sayur.png" alt="Bawang" class="mx-auto mb-2" style="width: 80px; height: 80px; object-fit: contain;">
-                    <p class="fw-bold mb-1">Sayur</p>
-                    <p class="text-muted mb-1 small">Deskripsi</p>
-                    <p class="fw-bold text-success small">Rp 10.000/kg</p>
-                </div>
+                    <p class="fw-bold mb-1">{{ $pangan->name }}</p>
+                    <p class="text-muted mb-1 small">{{ $pangan->description }}</p>
+                    <p class="fw-bold text-success small">
+                      Rp {{ number_format($pangan->harga, 0, ',', '.') }}/kg
+                    </p>
+                  </div>
+                @empty
+                  <p class="text-muted">Belum ada data pangan.</p>
+                @endforelse
+              </div>
 
-                <div class="card p-3 text-center flex-shrink-0" style="width: 160px;">
-                    <img src="front/assets/ikan.png" alt="Bawang" class="mx-auto mb-2" style="width: 80px; height: 80px; object-fit: contain;">
-                    <p class="fw-bold mb-1">Ikan</p>
-                    <p class="text-muted mb-1 small">Deskripsi</p>
-                    <p class="fw-bold text-success small">Rp 12.000/kg</p>
-                </div>
-                </div>
-                <!-- Tombol untuk Mobile -->
-                <div class="mt-3 d-flex justify-content-start d-block d-md-none">
-                    <a href="/infopangan" class="btn btn-danger d-flex align-items-center gap-2 px-4 py-2" style="border-radius: 12px;">
-                    <span>Baca Selengkapnya</span>
-                 
-                    </a>
-                </div>
+              <div class="mt-3 d-flex d-md-none">
+                <a href="{{ url('/infopangan') }}" class="btn btn-danger px-4 py-2 rounded-pill">
+                  Baca Selengkapnya
+                </a>
+              </div>
             </div>
          </div>
         </div>
@@ -127,43 +120,6 @@
   </div>
 </div>
 
-<!-- Info Saham -->
-<div class="container my-2 mt-5 mt-md-0">
-  <div class="card p-4">
-    <div class="row align-items-stretch">
-      <!-- Kiri -->
-      <div class="col-md-3 mb-4 d-flex flex-column justify-content-between">
-        <div class="info-saham-wrapper">
-          <h5 class="fw-bold mb-3">Info Saham</h5>
-          <p class="mb-1"><strong>Last Update:</strong> Minggu, 23 Maret 2025</p>
-          <p class="mb-1"><strong>Sumber:</strong> Info Pangan Jakarta</p>
-          <a href="/infosaham" class="btn btn btn-danger fw-bold rounded-pill  btn-kecil mt-4 d-none d-md-inline-block" >Baca Selengkapnya</a>
-        </div>
-      </div>
-
-      <!-- Kanan -->
-      <div class="col-md-9 d-flex flex-column justify-content-between overflow-visible">
-        <div class="d-flex stock-nav ps-md-4 ps-3">
-          <a href="#" class="text-dark fw-bold text-decoration-none">MAJOR INDEXES</a> |
-          <a href="#" class="text-muted fw-bold text-decoration-none">INDO-FX</a> |
-          <a href="#" class="text-muted fw-bold text-decoration-none">USD-FX</a> |
-          <a href="#" class="text-muted fw-bold text-decoration-none">COMMODITIES</a>
-        </div>
-
-        
-        <div class="d-flex flex-md-wrap flex-nowrap overflow-auto gap-3 mt-3" id="stock-cards">
-          <!-- Card Saham di js -->
-        </div>
-        <!-- Tombol hanya tampil di mobile -->
-        <div class="mt-3 ps-3 d-block d-md-none">
-          <a href="/infosaham" class="btn btn-danger fw-bold rounded-pill btn-kecil">
-            Baca Selengkapnya
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
   
   
 <!-- Explore Berita -->
