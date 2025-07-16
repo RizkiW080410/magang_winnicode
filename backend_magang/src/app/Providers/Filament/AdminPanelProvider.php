@@ -2,6 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Resources\BeritaResource\Widgets\BeritaCount;
+use App\Filament\Admin\Resources\UserResource\Widgets\PengunjungCount;
+use App\Filament\Admin\Widgets\AdminCount;
+use App\Filament\Admin\Widgets\AdminStatsWidget;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -50,6 +54,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 \Awcodes\Overlook\Widgets\OverlookWidget::class,
+                AdminCount::class,
             ])
             ->navigationGroups([
                 NavigationGroup::make()

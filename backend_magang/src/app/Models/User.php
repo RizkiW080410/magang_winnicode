@@ -85,4 +85,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         return $this->hasMany(Komentar::class);
     }
+
+    public function savedBeritas()
+    {
+        return $this->belongsToMany(\App\Models\Berita::class, 'berita_user')
+                    ->withTimestamps();
+    }
 }

@@ -9,10 +9,5 @@ class BranchCompany extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'alamat', 'company_id'];
-
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
+    protected $fillable = ['name', 'alamat'];
 }

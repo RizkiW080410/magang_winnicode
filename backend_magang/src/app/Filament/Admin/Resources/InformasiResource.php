@@ -34,9 +34,9 @@ class InformasiResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('logo')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('logo')
+                    ->image()
+                    ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
@@ -47,8 +47,7 @@ class InformasiResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('logo')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('logo'),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

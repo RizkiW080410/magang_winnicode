@@ -41,8 +41,7 @@ class CompanyResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('alamat')
-                    ->required()
+                Forms\Components\TextInput::make('telepon')
                     ->maxLength(255),
             ]);
     }
@@ -55,7 +54,7 @@ class CompanyResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('alamat')
+                Tables\Columns\TextColumn::make('telepon')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

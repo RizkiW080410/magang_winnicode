@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Admin\Resources\BeritaResource;
 use App\Filament\Admin\Resources\CategoryBeritaResource;
+use App\Filament\Penulis\Resources\BeritaResource\Widgets\BeritaCount;
+use App\Filament\Penulis\Widgets\PenulisCount;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -41,10 +43,7 @@ class PenulisPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
-            ])
-            ->resources([
-                BeritaResource::class,
-                CategoryBeritaResource::class,
+                PenulisCount::class,
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -8,7 +8,6 @@
 
   <!-- Favicon -->
   <link rel="icon" href="front/assets/favicon.ico" type="image/x-icon">
-  
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
@@ -18,8 +17,8 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ asset('front/style/style.css') }}">
   <link rel="stylesheet" href="{{ asset('front/style/detail.css') }}">
-  <link rel="stylesheet" href="{{ asset('front/style/infosaham.css') }}">
   <link rel="stylesheet" href="{{ asset('front/style/infopangan.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/style/save.css') }}">
 </head>
 <body>
 
@@ -27,32 +26,24 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark-custom py-3">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <img src="{{ asset('front/assets/icon.png') }}" alt="Portal Berita Logo" height="70">
+      <img src="{{ asset('front/assets/icon.png') }}" alt="Portal Berita Logo" height="50">
     </a>
-    <form class="d-flex position-relative mx-auto w-50 dropdown" autocomplete="off">
-      <input
-        id="searchInput"
-        class="form-control rounded-pill ps-5 dropdown-toggle"
-        type="search"
-        placeholder="Cari berita..."
-        data-bs-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-      <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
 
+    <!-- Search -->
+    <form class="d-flex position-relative mx-auto w-50 dropdown" autocomplete="off">
+      <input id="searchInput" class="form-control rounded-pill ps-5 dropdown-toggle" type="search"
+             placeholder="Cari berita..." data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
       <ul id="searchResults" class="dropdown-menu w-100 mt-1"></ul>
     </form>
-    <div class="d-flex">
+
+    <!-- Sidebar Toggle -->
+    <div class="d-flex align-items-center">
       @auth
-        @if (Auth::user()->hasRole('Pengunjung'))
-          <div class="d-flex align-items-center text-white me-3">
-            Hai, {{ Auth::user()->name }} |
-            <form action="{{ route('logout') }}" method="POST" class="d-inline ms-2">
-              @csrf
-              <button type="submit" class="btn btn-sm btn-light">Logout</button>
-            </form>
-          </div>
+        @if(Auth::user()->hasRole('Pengunjung'))
+          <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#userSidebar">
+            <i class="bi bi-list"></i>
+          </button>
         @endif
       @else
         <a href="#" class="btn btn-pink me-2" data-bs-toggle="modal" data-bs-target="#registerModal">Daftar</a>
@@ -61,6 +52,51 @@
     </div>
   </div>
 </nav>
+
+<!-- Offcanvas Sidebar -->
+@auth
+  @if(Auth::user()->hasRole('Pengunjung'))
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="userSidebar">
+      <div class="offcanvas-header bg-primary text-white">
+        <div class="d-flex align-items-center">
+          <img src="{{ Auth::user()->getFilamentAvatarUrl() }}" alt="Avatar" class="rounded-circle me-2" width="50" height="50">
+          <div>
+            <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+            <small>{{ Auth::user()->email }}</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <a href="#" class="d-flex align-items-center text-decoration-none text-dark"
+               data-bs-toggle="modal" data-bs-target="#profileModal" data-bs-dismiss="offcanvas">
+              <i class="bi bi-person-circle me-2 fs-4"></i>
+              <span>Profil Saya</span>
+            </a>
+          </li>
+          <li class="list-group-item">
+            <a href="{{ route('berita.saved') }}" class="d-flex align-items-center text-decoration-none text-dark">
+              <i class="bi bi-bookmark-fill me-2 fs-4"></i>
+              <span>Berita Tersimpan</span>
+              <span class="badge bg-secondary ms-auto">{{ Auth::user()->savedBeritas()->count() }}</span>
+            </a>
+          </li>
+          <li class="list-group-item">
+            <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
+              @csrf
+              <button type="submit" class="btn btn-link text-start w-100 text-dark">
+                <i class="bi bi-box-arrow-right me-2 fs-4"></i>
+                Logout
+              </button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  @endif
+@endauth
 
 <!-- Menu -->
 <div class="bg-white shadow-sm">
@@ -82,6 +118,54 @@
 
 @yield('content')
 
+<!-- Profil Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1">
+  @if(session('success'))
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    </div>
+  @endif
+  @auth
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Profil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <div class="modal-body">
+          <div class="text-center mb-3">
+            <img src="{{ Auth::user()->getFilamentAvatarUrl() }}" class="rounded-circle" width="100" height="100" alt="Avatar">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Avatar</label>
+            <input type="file" name="avatar_url" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nama Lengkap</label>
+            <input type="text" name="name" class="form-control" value="{{ Auth::user()->name }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ Auth::user()->email }}" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  @endauth
+</div>
+
+
 <!-- Modal Login Bootstrap -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -97,6 +181,12 @@
             <img src="{{ asset('front/assets/subiconlogin.png') }}" width="100" alt="Logo">
             <h5 class="fw-bold mt-3">LOG IN</h5>
           </div>
+          @if(session('warning'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              {{ session('warning') }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          @endif
           <form method="POST" action="{{ route('login') }}">
             @csrf
             <input type="email" name="email" class="form-control mb-3" placeholder="Email Address" required>
@@ -153,39 +243,40 @@
       <div class="col-md-3 mb-4">
         <h6 class="fw-bold mb-3">TAUTAN</h6>
         <ul class="list-unstyled small">
-          <li class="mb-2">
-            <i class="bi bi-globe2 me-2"></i>Winnicode
-          </li>
-          <li class="mb-2">
-            <i class="bi bi-instagram me-2"></i>Instagram
-          </li>
+          @foreach ($sosial_medias as $sosial)
+              <li class="mb-2">
+                <i class="{{ $sosial->icon }}"></i><a href="{{ $sosial->link }}" class="link-plain">{{ $sosial->name }}</a>
+              </li>
+          @endforeach
         </ul>
       </div>
       <!-- Kolom 2 -->
       <div class="col-md-3 mb-4">
-        <h6 class="fw-bold mb-3">TAUTAN</h6>
+        <h6 class="fw-bold mb-3">SITEMAP</h6>
         <ul class="list-unstyled small">
-          <li class="mb-2">Beranda</li>
-          <li class="mb-2">Ekonomi Bisnis</li>
-          <li class="mb-2">Pasar Saham</li>
-          <li class="mb-2">Crypto</li>
-          <li class="mb-2">Industri</li>
-          <li class="mb-2">Infrastruktur</li>
+          <li class="mb-2"><a href="/" class="link-plain">Beranda</a></li>
         </ul>
       </div>
       <!-- Kolom 3 -->
       <div class="col-md-3 mb-4">
-        <h6 class="fw-bold mb-3">TAUTAN</h6>
-        <p class="small mb-1">E-Mail: winnicodegarudaofficial@gmail.com</p>
-        <p class="small mb-1">Alamat (Pusat): Bandung - Jl. Asia Afrika No.158,<br> Kb. Pisang, Kec. Sumur Bandung, Kota Bandung, Jawa Barat 40261</p>
-        <p class="small mb-1">Alamat (Cabang): Bantul, Yogyakarta</p>
-        <p class="small">Call Center: 6285159932501 (24 Jam)</p> 
+        <h6 class="fw-bold mb-3">KONTAK KAMI</h6>
+        @foreach ($compenies as $compeni)
+            <p class="small mb-1">E-Mail: {{ $compeni->email }}</p>
+        @endforeach
+        @foreach ($branch_companies as $branch)
+            <p class="small mb-1">Alamat ({{ $branch->name }}): {{ $branch->alamat }}</p>
+        @endforeach
+        @foreach ($compenies as $compenie)
+            <p class="small">Call Center: {{ $compenie->telepon }} (24 Jam)</p> 
+        @endforeach
+        
       </div>
       <!-- Kolom 4 -->
       <div class="col-md-3 mb-4">
         <div class="d-flex align-items-center justify-content-center mb-2">
-          <img src="{{ asset('front/assets/footer.png') }}" alt="Winnicode Logo" style="height: 45px; margin-right: 10px;">
-          <img src="{{ asset('front/assets/merdeka.png') }}" alt="Kampus Merdeka Logo" style="height: 45px;">
+          @foreach ($informasis as $info)
+              <img src="{{ asset('storage/' . $info->logo) }}" alt="Winnicode Logo" style="height: 45px; margin-right: 10px;">
+          @endforeach
         </div>
         <p class="small text-center">
           Jurnalistik Program winnicode adalah program pengembangan sumber daya manusia yang ditujukan bagi pemuda pemudi yang berkarir di dunia report.
@@ -193,9 +284,12 @@
       </div>
     </div>
     <hr>
-    <div class="text-md-start text-center small text-muted">
-      Copyright © 2024 PT. WINNICODE GARUDA TEKNOLOGI
-    </div>
+    @foreach ($copyrights as $copy)
+        <div class="text-md-start text-center small text-muted">
+          {{ $copy->name }}
+        </div>
+    @endforeach
+    
   </div>
 </footer>
 
@@ -203,132 +297,10 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-{{-- <script src="front/js/script.js"></script> --}}
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-  const filterButtons = document.querySelectorAll('.kategori-btn');
-  const beritaItems = document.querySelectorAll('.berita-item');
-  const beritaTerkiniItems = document.querySelectorAll('.berita-terkini-item');
-
-  filterButtons.forEach(button => {
-    button.addEventListener('click', function (e) {
-      e.preventDefault();
-
-      // Highlight tombol aktif
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      this.classList.add('active');
-
-      const kategori = this.dataset.filter.toLowerCase();
-
-      // ✨ Fungsi untuk filter berita
-      function filterElements(items, isFlex = false) {
-        items.forEach(item => {
-          const itemKategori = item.dataset.category.toLowerCase();
-          const shouldShow = kategori === 'all' || itemKategori === kategori;
-
-          if (shouldShow) {
-            item.style.display = isFlex ? 'flex' : 'block';
-            item.style.visibility = 'hidden';
-            item.style.opacity = 0;
-            setTimeout(() => {
-              item.style.visibility = 'visible';
-              item.style.opacity = 1;
-            }, 10);
-          } else {
-            item.style.opacity = 0;
-            setTimeout(() => {
-              item.style.display = 'none';
-            }, 200);
-          }
-        });
-      }
-
-      filterElements(beritaItems); // untuk grid berita utama
-      filterElements(beritaTerkiniItems, true); // untuk sidebar (flex)
-    });
-  });
-});
+  window.beritaList      = @json($beritaList);
+  window.showLoginModal  = {{ session('warning') ? 'true' : 'false' }};
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const buttons = document.querySelectorAll(".like-btn");
-
-  buttons.forEach(button => {
-    const id = button.getAttribute("data-id");
-    const icon = document.getElementById("icon-" + id);
-    const count = document.getElementById("like-count-" + id);
-
-    // Inisialisasi status dari localStorage
-    if (localStorage.getItem("liked-" + id) === "true") {
-      icon.classList.remove("bi-hand-thumbs-up");
-      icon.classList.add("bi-hand-thumbs-up-fill");
-      count.innerText = "1";
-    }
-
-    button.addEventListener("click", function () {
-      const liked = localStorage.getItem("liked-" + id) === "true";
-
-      if (liked) {
-        icon.classList.remove("bi-hand-thumbs-up-fill");
-        icon.classList.add("bi-hand-thumbs-up");
-        localStorage.setItem("liked-" + id, "false");
-        count.innerText = "0";
-      } else {
-        icon.classList.remove("bi-hand-thumbs-up");
-        icon.classList.add("bi-hand-thumbs-up-fill");
-        localStorage.setItem("liked-" + id, "true");
-        count.innerText = "1";
-      }
-    });
-  });
-});
-
-function toggleReplyForm(id) {
-  const form = document.getElementById("reply-form-" + id);
-  form.classList.toggle("d-none");
-}
-</script>
-<script>
-  // Variabel global berisi daftar berita: [{id,title},...]
-  window.beritaList = @json($beritaList);
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const input = document.getElementById('searchInput');
-  const menu  = document.getElementById('searchResults');
-  let timeout;
-
-  input.addEventListener('input', () => {
-    clearTimeout(timeout);
-    const q = input.value.trim().toLowerCase();
-    if (q.length < 2) return menu.innerHTML = '';
-
-    timeout = setTimeout(() => {
-      const matches = window.beritaList
-        .filter(b => b.title.toLowerCase().includes(q))
-        .slice(0,5);
-
-      if (matches.length === 0) {
-        menu.innerHTML = '<li class="px-3 py-2 text-muted">Tidak ada hasil.</li>';
-      } else {
-        menu.innerHTML = matches.map(b => `
-          <li>
-            <a class="dropdown-item d-flex align-items-center" href="/detailberita/${b.id}">
-              <img src="${b.img}" alt="" class="me-2 rounded" style="width:40px; height:40px; object-fit:cover;">
-              <span class="flex-grow-1 text-truncate">${b.title}</span>
-            </a>
-          </li>
-        `).join('');
-      }
-
-      new bootstrap.Dropdown(input).show();
-    }, 200);
-  });
-
-  document.addEventListener('click', e => {
-    if (!input.contains(e.target)) menu.innerHTML = '';
-  });
-});
-</script>
+<script src="{{ asset('front/js/script.js') }}"></script>
 </body>
 </html>

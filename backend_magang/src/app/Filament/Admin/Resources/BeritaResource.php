@@ -27,19 +27,6 @@ class BeritaResource extends Resource
 
     protected static ?int $navigationSort = 13;
 
-    public static function getEloquentQuery(): Builder
-    {
-        $query = parent::getEloquentQuery();
-
-        // Jika panel saat ini adalah 'penulis', batasi ke berita milik user
-        $panel = Filament::getCurrentPanel();
-        if ($panel?->getId() === 'penulis') {
-            $query->where('user_id', auth()->id());
-        }
-
-        return $query;
-    }
-
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();

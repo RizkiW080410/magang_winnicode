@@ -22,33 +22,48 @@ class DatabaseSeeder extends Seeder
 
         // $user->assignRole('super_admin');
 
+        // $this->seedUsers();
+        // $this->callSeeders();
+        // 1) Seed Roles & Permissions terlebih dahulu
+        $this->call([
+            RoleSeeder::class,
+            PermissionSeeder::class,
+        ]);
+
+        // 2) Baru seed Users (Admin, Penulis, Pengunjung)
         $this->seedUsers();
-        $this->callSeeders();
     }
 
     private function seedUsers(): void
     {
+        // 1) Admin
         if (! User::where('email', 'admin@admin.com')->exists()) {
-            $users = User::factory()->createMany([
-                [
-                    'name' => 'Admin',
-                    'email' => 'admin@admin.com',
-                    'password' => bcrypt('password'),
-                ],
+            $admin = User::factory()->create([
+                'name'     => 'Admin',
+                'email'    => 'admin@admin.com',
+                'password' => bcrypt('password'),
             ]);
-
-            foreach ($users as $user) {
-                if ($user->email === 'admin@admin.com') {
-                    $user->assignRole('super_admin');
-                }
-            }
+            $admin->assignRole('super_admin');
         }
-    }
 
-    private function callSeeders(): void
-    {
-        $this->call([
-            RoleSeeder::class,
-        ]);
+        // 2) Penulis
+        if (! User::where('email', 'penulis@contoh.com')->exists()) {
+            $penulis = User::factory()->create([
+                'name'     => 'Penulis',
+                'email'    => 'penulis@contoh.com',
+                'password' => bcrypt('password'),
+            ]);
+            $penulis->assignRole('Penulis');
+        }
+
+        // 3) Pengunjung
+        if (! User::where('email', 'pengunjung@contoh.com')->exists()) {
+            $pengunjung = User::factory()->create([
+                'name'     => 'Pengunjung',
+                'email'    => 'pengunjung@contoh.com',
+                'password' => bcrypt('password'),
+            ]);
+            $pengunjung->assignRole('Pengunjung');
+        }
     }
 }

@@ -13,6 +13,18 @@
           <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
             <span class="badge bg-dark text-white px-3 py-2">{{ $berita->categoryBerita->name }}</span>
             <span class="text-secondary small">Penulis: {{ $berita->user->name }}</span>
+            @auth
+              <form action="{{ 
+                    Auth::user()->savedBeritas->contains($berita) 
+                      ? route('berita.unsave',   $berita)
+                      : route('berita.save',     $berita)
+                  }}" method="POST" class="d-inline">
+                @csrf
+                <button class="btn btn-sm {{ Auth::user()->savedBeritas->contains($berita) ? 'btn-danger' : 'btn-outline-primary' }}">
+                  {{ Auth::user()->savedBeritas->contains($berita) ? 'Hapus Simpanan' : 'Simpan untuk Nanti' }}
+                </button>
+              </form>
+            @endauth
           </div>
           <p class="text-muted small">
             {{ \Carbon\Carbon::parse($berita->tanggal_terbit)->translatedFormat('l, d F Y – H:i') }}

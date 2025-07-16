@@ -25,4 +25,10 @@ class Berita extends Model
     {
         return $this->hasMany(Komentar::class);
     }
+
+    public function savedByUsers()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'berita_user')
+                    ->withTimestamps();
+    }
 }

@@ -1,0 +1,16 @@
+.btn-baca {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+.btn-baca:hover {
+  background-color: #f0f0f0;
+}
+.btn-hapus:hover {
+  background-color: #f0f0f0;
+}
+
+.link-plain {
+    text-decoration: none;
+    color: inherit;
+  }
